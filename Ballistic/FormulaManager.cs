@@ -20,7 +20,7 @@ public enum WIndDir
   DOWN,
 }
 
-public class FomulaManager : MonoBehaviour
+public class FormulaManager : MonoBehaviour
 {
     [Header("[Shooter]")]
     public GameObject Shooter;
@@ -41,7 +41,6 @@ public class FomulaManager : MonoBehaviour
     public double Bullet_Angle_V;
     private double Bullet_Radian_V;
 
-    //계산하기 편하게 중력가속도 10
     private float G=9.81f;
     private float time;
 

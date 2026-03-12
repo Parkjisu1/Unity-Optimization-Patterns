@@ -1,4 +1,4 @@
-# Unity 최적화 패턴 | Unity Optimization Patterns
+# Unity Optimization Patterns | Unity 최적화 패턴
 
 > 실전에서 검증된 Unity 디자인 패턴과 최적화 기법 모음 — Singleton, Delegate, Object Pooling, 네트워킹, 포스트 프로세싱 등
 >
@@ -18,89 +18,123 @@ A collection of **battle-tested Unity design patterns** and optimization techniq
 
 ---
 
+## 프로젝트 구조 | Project Structure
+
+```
+Unity-Optimization-Patterns/
+├── README.md
+├── Singleton/
+│   ├── Singleton.cs            # Generic Singleton<T> base class
+│   └── README.md
+├── Delegate/
+│   ├── DelegateExample.cs      # Delegate, Action, Func examples
+│   └── README.md
+├── Ballistic/
+│   ├── FormulaManager.cs       # Projectile trajectory + wind simulation
+│   └── README.md
+├── Photon/
+│   ├── PunManager.cs           # Photon PUN networking manager
+│   └── README.md
+├── PostProcess/
+│   └── README.md               # Post-processing setup guide
+├── ScriptableObject/
+│   ├── ItemData.cs             # ScriptableObject example
+│   └── README.md
+├── SnowFight/
+│   ├── SnowFightController.cs  # Multiplayer snowball fight mini-game
+│   └── README.md
+├── Util/
+│   ├── MathHelper.cs           # Angle calculation, ref keyword
+│   ├── PlayerMovement.cs       # Smooth keyboard movement
+│   └── README.md
+└── Portfolio/
+    ├── README.md               # AOS game portfolio overview
+    └── Scripts/
+        ├── GameManager.cs
+        ├── UIManager.cs
+        ├── PunManager.cs
+        ├── CameraManager.cs
+        ├── CameraManager_CineCam.cs
+        ├── MapManager.cs
+        ├── ShopManager.cs
+        ├── Player/
+        │   ├── NPlayer.cs
+        │   ├── NPlayerMove.cs
+        │   └── NPlayerRPC.cs
+        ├── Data/
+        │   ├── DataTableManager.cs
+        │   ├── ItemInfo.cs
+        │   ├── MonsterInfo.cs
+        │   ├── PlayerInfo.cs
+        │   └── EnumDataList.cs
+        └── Effects/
+            └── DissolveShader.shader
+```
+
+---
+
 ## 패턴 목록 | Patterns
 
-### Singleton | 싱글톤
+### [Singleton](./Singleton/) | 싱글톤
 
-Unity MonoBehaviour 매니저를 위한 스레드 안전 싱글톤 패턴.
+Unity MonoBehaviour 매니저를 위한 제네릭 싱글톤 패턴. 지연 초기화 및 전역 접근 지원.
 
-- **DontDestroyOnLoad** — 씬 전환에도 유지되는 영속 매니저
-- **지연 초기화** — null 체크 기반 Lazy initialization
-- 씬 전환 안전성 보장
-- 적용: GameManager, AudioManager, UIManager
+Generic Singleton base class for Unity MonoBehaviour managers with lazy initialization.
 
 ```csharp
 public class GameManager : Singleton<GameManager>
 {
-    // GameManager.Instance.DoSomething() 으로 어디서든 접근
     public void DoSomething() { }
 }
 ```
 
-### Delegate & Event | 델리게이트 & 이벤트
+### [Delegate & Event](./Delegate/) | 델리게이트 & 이벤트
 
-C# 델리게이트와 이벤트를 활용한 시스템 간 비결합 통신.
+C# 델리게이트와 Action/Func를 활용한 시스템 간 비결합 통신.
 
-- **Action/Func 델리게이트** — 유연한 콜백 처리
-- **이벤트 기반 아키텍처** — 직접 의존성 최소화
-- Publisher-Subscriber 패턴 구현
-- 적용: UI 업데이트, 게임 상태 변경, 업적 트리거
+Decoupled inter-system communication using C# Delegates, Action, and Func.
 
-### ScriptableObject | 스크립터블 오브젝트
+### [Ballistic](./Ballistic/) | 탄도 물리
+
+물리 기반 투사체 궤도 계산 및 바람 저항 시뮬레이션.
+
+Physics-based projectile trajectory calculation with wind resistance simulation.
+
+### [Photon Networking](./Photon/) | 포톤 네트워킹
+
+Photon PUN 기반 멀티플레이어 네트워킹 — 룸 관리, RPC 통신, UDP/TCP 비교.
+
+Photon PUN multiplayer networking — room management, RPC communication, protocol comparison.
+
+### [Post-Processing](./PostProcess/) | 포스트 프로세싱
+
+URP/Built-in 파이프라인 포스트 프로세싱 설정 가이드.
+
+Post-processing setup guide for URP and Built-in render pipelines.
+
+### [ScriptableObject](./ScriptableObject/) | 스크립터블 오브젝트
 
 Unity ScriptableObject를 활용한 데이터 주도 설계.
 
-- **런타임 데이터 컨테이너** — MonoBehaviour 오버헤드 없음
-- 씬 간 공유 설정 관리
-- Inspector 친화적 데이터 편집
-- 적용: 아이템 DB, 캐릭터 스탯, 게임 설정
+Data-driven design using Unity ScriptableObjects as lightweight data containers.
 
-### Ballistic | 탄도 물리
+### [SnowFight](./SnowFight/) | 눈싸움 미니게임
 
-물리 기반 투사체 궤도 계산 및 시뮬레이션.
+Photon PUN 기반 실시간 멀티플레이어 눈싸움 배틀로얄 미니게임.
 
-- **포물선 궤도** 계산
-- 중력 영향 투사체 모션
-- 발사 각도 및 속도 산출
-- 적용: 포격, 투척 메커닉, 궤도 프리뷰
+Real-time multiplayer snowball fight battle royale mini-game system.
 
-### Photon Networking | 포톤 네트워킹
+### [Utility](./Util/) | 유틸리티
 
-Photon PUN 기반 멀티플레이어 네트워킹 패턴.
+재사용 가능한 수학 헬퍼 및 플레이어 이동 클래스.
 
-- **룸 관리** 및 매치메이킹
-- 상태 동기화 전략
-- RPC (Remote Procedure Call) 패턴
-- 적용: 실시간 멀티플레이어 게임, 로비 시스템
+Reusable math helpers and smooth player movement implementation.
 
-### Post-Processing | 포스트 프로세싱
+### [Portfolio](./Portfolio/) | AOS 게임 포트폴리오
 
-비주얼 향상 파이프라인 및 렌더링 최적화.
+AOS류 게임 전체 구현 — 플레이어/몬스터/NPC 시스템, UI, 데이터 관리, Photon 네트워킹.
 
-- **URP/Built-in** 포스트 프로세싱 설정
-- Bloom, Color Grading, Vignette 설정
-- 성능 최적화된 이펙트 스태킹
-- 적용: 비주얼 폴리싱, 분위기 연출, 스크린샷 모드
-
-### Utility | 유틸리티
-
-재사용 가능한 헬퍼 클래스 및 확장 메서드.
-
-- **오브젝트 풀링** — Instantiate/Destroy 대신 재활용으로 GC 스파이크 제거
-- 컬렉션 확장 및 헬퍼 메서드
-- 게임 개발용 수학 유틸리티
-- 적용: 빈번하게 생성되는 오브젝트 (총알, 이펙트, 파티클)
-
-```csharp
-// 풀 사전 생성
-ObjectPool.Instance.CreatePool(bulletPrefab, 50);
-
-// 풀에서 가져오기 (Instantiate 대신)
-var bullet = ObjectPool.Instance.GetObject(bulletPrefab);
-
-// 풀에 반환 (Destroy 대신)
-ObjectPool.Instance.ReturnObject(bullet);
-```
+Complete AOS-style game implementation — player/monster/NPC systems, UI, data management, Photon networking.
 
 ---
 
@@ -136,7 +170,7 @@ ObjectPool.Instance.ReturnObject(bullet);
 
 1. 원하는 패턴 폴더를 Unity 프로젝트의 `Assets/Scripts/`에 복사
 2. 필요시 네임스페이스 조정
-3. 각 스크립트의 주석을 따라 통합
+3. 각 스크립트의 주석 및 README를 참고하여 통합
 
 ---
 
